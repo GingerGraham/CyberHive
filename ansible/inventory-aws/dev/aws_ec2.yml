@@ -1,0 +1,5 @@
+plugin: amazon.aws.aws_ec2
+
+# Lookup the aws credentials from the environment variables and set a default value of the default profile if not set
+aws_profile: "{{ lookup('env', 'AWS_PROFILE') | default('default', true) }}"
+
