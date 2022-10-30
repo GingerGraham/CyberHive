@@ -1,0 +1,56 @@
+---
+# Include environment specific variables
+- include_vars: "vars/{{ env }}.yml"
+# ---
+# Set the hostname of the instance to the value of the variable "hostname"
+- name: Set hostname
+  ansible.builtin.hostname:
+    name: "{{ hostname }}"
+    use: systemd
+# ---
+# Set the timezone of the instance to the value of the variable "timezone"
+- name: Set timezone
+  community.general.timezone:
+    name: "{{ timezone }}"
+# ---
+# Update the package cache
+- name: Update package cache
+  ansible.builtin.apt:
+    update_cache: yes
+# ---
+# Update all installed packages to their latest versions
+- name: Update packages
+  ansible.builtin.apt:
+    name: "*"
+    state: latest
+  notify: Restart the server
+# ---
+# Configure the firewall to allow established and related connections
+- name: Configure iptables to allow established and related connections
+  ansible.builtin.iptables:
+    chain: INPUT
+    protocol: all
+    ctstate: "ESTABLISHED,RELATED"
+    jump: ACCEPT
+# ---
+# Configure the firewall to allow ICMP connections from anywhere
+- name: Configure iptables to allow ICMP connections from anywhere
+  ansible.builtin.iptables:
+    chain: INPUT
+    protocol: icmp
+    jump: ACCEPT
+# ---
+# Configure iptables to allow SSH connections
+- name: Configure iptables to allow SSH connections
+  ansible.builtin.iptables:
+    chain: INPUT
+    protocol: tcp
+    destination_port: 22
+    jump: ACCEPT
+# ---
+# Configure iptables standard INPUT chain to DROP
+- name: Configure iptables INPUT chain
+  ansible.builtin.iptables:
+    chain: INPUT
+    policy: DROP
+# ---

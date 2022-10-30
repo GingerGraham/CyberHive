@@ -1,5 +1,31 @@
 plugin: amazon.aws.aws_ec2
 
+cache: true
+
 # Lookup the aws credentials from the environment variables and set a default value of the default profile if not set
 aws_profile: "{{ lookup('env', 'AWS_PROFILE') | default('default', true) }}"
 
+filters:
+  # Filter for running instances
+  instance-state-name: running
+  # Filter the instances by the tag "Environment" with the value "dev"
+  tag:Environment: Dev
+  # Filter by the Project tag CyberHive
+  tag:Project: CyberHive
+
+groups:
+  # Create a group called "web" and add all instances with the tag "Role" with the value "WebServer"
+  web: "'Role' in tags and tags['Role'] == 'WebServer'"
+  # Create a group for all Linux instances with the tag "OS" with the values "Linux", "Ubuntu" or "CentOS"
+  linux: "'OS' in tags and tags['OS'] in ['Linux', 'Ubuntu', 'CentOS']"
+
+compose:
+  # Create a variable called "ansible_host" with the value of the public ip address
+  ansible_host: public_ip_address
+  # ansible_host: private_ip_address
+  # Set the ansible_ssh_user to the value of "ubuntu" if the OS tag is "Ubuntu" and to "ec2-user" if the OS tag is "CentOS"
+  # ansible_ssh_user: "'OS' in tags and tags['OS'] == 'Ubuntu' | ternary('ubuntu', 'ec2-user')"
+  # Create a variable called hostname with the value of the tag "Name"
+  hostname: "'Name' in tags and tags['Name']"
+  # Define the SSH Key to use based on a tag called "SSH_Key"
+  ansible_ssh_private_key_file: "~/.ssh/cyberhive"

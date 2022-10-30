@@ -1,0 +1,9 @@
+# List of packages to install
+# Packages to include are apache
+packages:
+  - apache2
+
+# Port to allow inbound access to
+ports:
+  - 80
+  - 443

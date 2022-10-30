@@ -1,0 +1,18 @@
+---
+# Loop through the list of packages to install and install them using apt
+- name: Install packages
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ packages }}"
+  notify: Start the web server
+# ---
+# Loop through the list of ports to allow inbound access to and configure the firewall to allow inbound access to them
+- name: Configure iptables to allow inbound access to ports
+  ansible.builtin.iptables:
+    chain: INPUT
+    protocol: tcp
+    destination_port: "{{ item }}"
+    jump: ACCEPT
+  loop: "{{ ports }}"
+# ---

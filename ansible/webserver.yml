@@ -1,0 +1,13 @@
+---
+# Playbook to install webservers using the common and web-server roles
+- name: Install webserver
+  hosts: web
+  user: ubuntu
+  become: true
+  become_method: sudo
+  roles:
+    - common
+    - web-server
+  vars:
+    env: '{{ inventory_dir | basename }}'
+    ansible_ssh_private_key_file: "~/.ssh/cyberhive"

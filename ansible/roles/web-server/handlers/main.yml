@@ -1,0 +1,31 @@
+---
+# Start the web server
+- name: Start the web server
+  service:
+    name: httpd
+    state: started
+    enabled: yes
+  notify: Restart the web server
+# ---
+# Restart the web server
+- name: Restart the web server
+  service:
+    name: httpd
+    state: restarted
+  notify: Restart the web server
+# ---
+# Reload the web server
+- name: Reload the web server
+  service:
+    name: httpd
+    state: reloaded
+  notify: Restart the web server
+# ---
+# Stop the web server
+- name: Stop the web server
+  service:
+    name: httpd
+    state: stopped
+    enabled: no
+  notify: Restart the web server
+# ---
