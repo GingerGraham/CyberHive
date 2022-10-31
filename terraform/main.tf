@@ -19,8 +19,8 @@ provider "aws" {
   region  = "eu-west-2"
   default_tags {
     tags = {
-      Owner = "Graham Watts"
-      Environment = "Dev"
+      Owner = var.owner["Name"]
+      Environment = var.environment
     }
   }
 }
@@ -28,7 +28,7 @@ provider "aws" {
 # Create a new AWS Account in the OU Demo (OU ID: ou-xyub-6uzxm5pq) 
 resource "aws_organizations_account" "cyberhive" {
   name = "CyberHive"
-  email = "mail@grahamwatts.com"
+  email = var.owner["Email"]
   iam_user_access_to_billing = "DENY"
   role_name = "OrganizationAccountAccessRole"
   parent_id = "ou-xyub-drl94pbz"
